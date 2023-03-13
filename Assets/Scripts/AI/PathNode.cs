@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class PathNode //: MonoBehaviour
 {
@@ -8,9 +9,9 @@ public class PathNode //: MonoBehaviour
     public Vector3 worldPosition;   //  Позиция в глобальных координатах
     private GameObject objPrefab;   //  Шаблон объекта
     public GameObject body;         //  Объект для отрисовки
-    
+
     private PathNode parentNode = null;               //  откуда пришли
-    
+
     /// <summary>
     /// Родительская вершина - предшествующая текущей в пути от начальной к целевой
     /// </summary>
@@ -30,6 +31,7 @@ public class PathNode //: MonoBehaviour
         get => distance;
         set => distance = value;
     }
+
 
     /// <summary>
     /// Устанавливаем родителя и обновляем расстояние от него до текущей вершины. Неоптимально - дважды расстояние считается
@@ -70,7 +72,12 @@ public class PathNode //: MonoBehaviour
     {
         return Vector3.Distance(a.body.transform.position, b.body.transform.position) + 40 * Mathf.Abs(a.body.transform.position.y - b.body.transform.position.y);
     }
-    
+
+    public float HeuristicDist(PathNode obj)
+    {
+        return Vector3.Distance(worldPosition, obj.body.transform.position);
+    }
+
     /// <summary>
     /// Подсветить вершину - перекрасить в красный
     /// </summary>
@@ -78,12 +85,27 @@ public class PathNode //: MonoBehaviour
     {
         body.GetComponent<Renderer>().material.color = Color.red;
     }
-    
+
+    public void ShowDPath()
+    {
+        body.GetComponent<Renderer>().material.color = Color.green;
+    }
+
+    public void ShowAPath()
+    {
+        body.GetComponent<Renderer>().material.color = Color.magenta;
+    }
+
     /// <summary>
     /// Снять подсветку с вершины - перекрасить в синий
     /// </summary>
     public void Fade()
     {
         body.GetComponent<Renderer>().material.color = Color.blue;
+    }
+
+    public void Block()
+    {
+        body.GetComponent<Renderer>().material.color = Color.black;
     }
 }
