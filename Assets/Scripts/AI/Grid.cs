@@ -190,7 +190,6 @@ public class Grid : MonoBehaviour
         //  Начальную вершину помещаем в очередь
         nodes.Enqueue(startNode, start.Distance);
         //  Пока не обработаны все вершины (очередь содержит узлы для обработки)
-
         while (nodes.Count != 0)
         {
             Vector2Int current = nodes.Dequeue();
@@ -206,7 +205,7 @@ public class Grid : MonoBehaviour
                         nodes.Remove(node);
                     }
                     grid[node.x, node.y].ParentNode = grid[current.x, current.y];
-                    nodes.Enqueue(node, grid[current.x, current.y].Distance + PathNode.Dist(grid[node.x, node.y], grid[current.x, current.y]));
+                    nodes.Enqueue(node, grid[node.x, node.y].Distance);
                 }
         }
         //  Восстанавливаем путь от целевой к стартовой
@@ -258,10 +257,7 @@ public class Grid : MonoBehaviour
                         nodes.Remove(node);
                     }
                     grid[node.x, node.y].ParentNode = grid[current.x, current.y];
-                    nodes.Enqueue(node, grid[current.x, current.y].Distance
-                        + PathNode.Dist(grid[node.x, node.y], grid[current.x, current.y])
-                        + grid[node.x, node.y].HeuristicDist(grid[finishNode.x, finishNode.y])
-                        /*+ PathNode.Dist(grid[node.x, node.y], grid[finishNode.x, finishNode.y])*/);
+                    nodes.Enqueue(node, grid[node.x, node.y].Distance + grid[node.x, node.y].HeuristicDist(grid[finishNode.x, finishNode.y]));
                 }
         }
         //  Восстанавливаем путь от целевой к стартовой
